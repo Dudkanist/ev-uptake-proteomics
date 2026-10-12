@@ -1,7 +1,8 @@
 # Quantitative Proteomic Profiling of Differential EV Uptake in Osteoblastic Niches
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
-[![License: Internal/Academic](https://img.shields.io/badge/license-Academic_Research-green.svg)]()
+[![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json&style=flat-square)](https://pixi.sh)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg?style=flat-square)](https://www.python.org/downloads/)
 
 This repository contains the computational pipeline and orthogonal statistical framework for quantifying differential extracellular vesicle (EV) uptake by osteoblastic SAOS-2 cells, comparing non-metastatic (**PC3**) and aggressive metastatic (**PC3M**) prostate carcinoma cargo.
 
@@ -21,18 +22,69 @@ This repository contains the computational pipeline and orthogonal statistical f
 4. **Univariate Hypothesis Testing:** Two-sided Welch's unequal variances $t$-test with Benjamini–Hochberg FDR control ($q < 0.10, \vert{}\text{Log}_2\text{FC}\vert{} \ge 1.0$), identifying **12 core uptake markers**.
 5. **Orthogonal Machine Learning:** Random Forest ensemble of decision stumps (`max_depth=1`, 15,000 trees; LOOCV Accuracy = **85.7%**), revealing an invariant linear separability plateau of **58 proteins** with **ITGB1 (Integrin $\beta 1$)** at rank #1.
 
----
+## Quick Start & Reproducibility
 
-## Reproducibility & Environment Setup
+### Option A: Using Pixi (Recommended)
 
-This project uses [Pixi](https://pixi.sh) for deterministic Conda environment resolution:
+This project uses [Pixi](https://pixi.sh) to ensure fully reproducible, cross-platform conda environments.
+
+### 1. Install Pixi (if not already installed)
+```bash
+curl -fsSL https://pixi.sh/install.sh | sh
+
+```
+
+*(Restart your terminal or run `source ~/.bashrc` if needed).*
+
+### 2. Clone the repository
 
 ```bash
-# Recommended (instant setup via Pixi):
+git clone https://github.com/Dudkanist/ev-uptake-proteomics.git
+
+```
+
+### 3. Navigate into the project directory
+
+```bash
+cd ev-uptake-proteomics
+
+```
+
+### 4. Launch JupyterLab
+
+All dependencies will be automatically resolved and installed into an isolated environment on the first run:
+
+```bash
 pixi run jupyter
 
-# Alternative (derived from pixi):
-# conda env create -f environment.yml
+```
+
+*Alternatively, you can start classic Notebook via:*
+
+```bash
+pixi run jupyter lab
+
+```
+
+### Option B: Using Classic Conda
+
+This option was not tested thus unrecommended. I neither have regular conda, nor want to deal with it.
+
+```bash
+# 1. Clone repository & enter directory
+git clone https://github.com/Dudkanist/ev-uptake-proteomics.git
+cd ev-uptake-proteomics
+
+# 2. Create the environment from environment.yml
+conda env create -f environment.yml
+# (or faster with mamba: mamba env create -f environment.yml)
+
+# 3. Activate the environment
+conda activate ev-uptake-proteomics
+
+# 4. Launch JupyterLab
+jupyter lab
+
 ```
 
 ---
@@ -45,14 +97,15 @@ pixi run jupyter
 
 ## Citation & License
 
-This project is licensed under the terms of the GNU General Public License v3.0 (GPL-3.0). 
-Any reuse, adaptation, or inclusion of this pipeline in academic publications or derived codebases requires explicit attribution to the author.
+This project is licensed under the [GNU General Public License v3.0 (GPL-3.0)](LICENSE).
 
-If you use this work, please cite:
+If you use or adapt this pipeline in your research, please cite it as:
+
 ```bibtex
 @software{mantsevich2026ev,
-  author = {Mantsevich, Vladislav},
-  title = {Reproducible Proteomic Profiling Pipeline of Extracellular Vesicle Uptake},
-  year = {2026},
-  url = {[https://github.com/Dudkanist/ev-uptake-proteomics](https://github.com/Dudkanist/ev-uptake-proteomics)}
+  author    = {Mantsevich, Vladislav},
+  title     = {Reproducible Proteomic Profiling Pipeline of Extracellular Vesicle Uptake},
+  year      = {2026},
+  publisher = {GitHub},
+  url       = {https://github.com/Dudkanist/ev-uptake-proteomics}
 }

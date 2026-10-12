@@ -10,4 +10,5 @@ dependencies:
 - seaborn >=0.13.2,<0.14
 - matplotlib >=3.11.2,<4
 - scikit-learn >=1.9.1,<2
+- jupyterlab >=4.6.4,<5
 

@@ -1,23 +1,21 @@
 # pixi environments
 .pixi/*
 !.pixi/config.toml
-# Виртуальные окружения и служебный кэш
+# Virtual environments and utility cache
 .pixi/
 .quarto/
 
-# Исключение: оставляем небольшое описание данных в репозитории
-!data_info.txt
+# Exception: keep a brief description of the data in the repository
 
-# Артефакты рендера Quarto / Jupyter
+# Quarto / Jupyter render artifacts
 main_reorganized_en_files/
 
-# Кэш контрольных точек Jupyter (на случай, если появится)
+# Jupyter checkpoint cache (in case it appears)
 .ipynb_checkpoints/
 
 # Raw search data and large tabular outputs
 MEK_*
 *.txt
-!data_info.txt
 *.xlsx
 *.raw
 *.csv
@@ -27,3 +25,4 @@ MEK_*
 main.ipynb
 main_reorganized_en.ipynb
 image.png
+data_info.txt

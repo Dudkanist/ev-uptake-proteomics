@@ -1,0 +1,29 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+# Виртуальные окружения и служебный кэш
+.pixi/
+.quarto/
+
+# Исключение: оставляем небольшое описание данных в репозитории
+!data_info.txt
+
+# Артефакты рендера Quarto / Jupyter
+main_reorganized_en_files/
+
+# Кэш контрольных точек Jupyter (на случай, если появится)
+.ipynb_checkpoints/
+
+# Raw search data and large tabular outputs
+MEK_*
+*.txt
+!data_info.txt
+*.xlsx
+*.raw
+*.csv
+*.tsv
+
+# Old drafts
+main.ipynb
+main_reorganized_en.ipynb
+image.png

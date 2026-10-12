@@ -42,3 +42,17 @@ pixi run jupyter
 - `Quantitative_Proteomic_Profiling_of_EV_Uptake.pdf`: Complete 21-slide deck prepared for laboratory leadership review.
 
 *Note: Raw mass spectrometry output files are excluded from version control in compliance with institutional data governance policies.*
+
+## Citation & License
+
+This project is licensed under the terms of the GNU General Public License v3.0 (GPL-3.0). 
+Any reuse, adaptation, or inclusion of this pipeline in academic publications or derived codebases requires explicit attribution to the author.
+
+If you use this work, please cite:
+```bibtex
+@software{mantsevich2026ev,
+  author = {Mantsevich, Vladislav},
+  title = {Reproducible Proteomic Profiling Pipeline of Extracellular Vesicle Uptake},
+  year = {2026},
+  url = {[https://github.com/Dudkanist/ev-uptake-proteomics](https://github.com/Dudkanist/ev-uptake-proteomics)}
+}

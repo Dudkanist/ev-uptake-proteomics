@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this pipeline or code, please cite it as below."
+authors:
+  - family-names: "Mantsevich"
+    given-names: "Vladislav"
+title: "Reproducible Proteomic Profiling Pipeline of Extracellular Vesicle Uptake"
+version: 1.0.0
+date-released: 2026-10-12
+url: "https://github.com/Dudkanist/ev-uptake-proteomics"

@@ -35,7 +35,7 @@ This project uses [Pixi](https://pixi.sh) for reproducible dependency resolution
 
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/Dudkanist/ev-uptake-proteomics.git](https://github.com/Dudkanist/ev-uptake-proteomics.git)
+git clone https://github.com/Dudkanist/ev-uptake-proteomics.git
 cd ev-uptake-proteomics
 
 # 2. Launch JupyterLab in the managed environment

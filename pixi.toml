@@ -24,6 +24,7 @@ jupyterlab = ">=4.6.4,<5"
 r-base = ">=4.5.3,<4.6"
 bioconductor-limma = ">=3.68.5,<4"
 rpy2 = ">=3.6.9,<4"
+adjusttext = ">=1.4.0,<2"
 
 [activation.env]
 R_HOME = "$PIXI_PROJECT_ROOT/.pixi/envs/default/lib/R"

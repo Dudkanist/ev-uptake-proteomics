@@ -4,21 +4,20 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg?style=flat-square)](https://www.python.org/downloads/)
 
-This repository contains the end-to-end computational pipeline and statistical framework for quantifying differential extracellular vesicle (EV) cargo uptake by recipient osteoblastic SAOS-2 cells. The biological model compares internalization of non-metastatic (**PC3**) versus metastatic (**PC3M**) prostate carcinoma EV cargo
+This repository contains the end-to-end computational pipeline and statistical framework for quantifying differential extracellular vesicle (EV) cargo uptake by recipient osteoblastic SAOS-2 cells. The biological model compares internalization of parental (**PC3**) versus metastatic (**PC3M-luc-C6**) prostate carcinoma EV cargo.
 ---
 
 ## Experimental Design & MS Acquisition
 - **Metabolic Pulse-Chase Tracing:** Heavy metabolic labelling (Arg10 / Lys-D8 SILAC) of donor EV cargo against an unlabelled recipient SAOS-2 cellular background (accounting for ~97.5% of PSMs).
-- **Multiplexed Acquisition:** 18-plex TMTpro SPS-MS3 workflow acquired on a Thermo Orbitrap Eclipse with synchronous precursor selection (MIPS precursor isolation, co-isolation threshold < 75% to eliminate ratio compression).
+- **Multiplexed Acquisition:** 18-plex TMTpro SPS-MS3 workflow acquired on a Thermo Orbitrap Eclipse with synchronous precursor selection (MIPS precursor isolation, co-isolation threshold < 75% to substantially mitigate ratio compression).
 - **Identification & Confidence:** Real-Time Search (RTS) triggering, Sequest HT search engine, and Percolator target-decoy scoring ($q \le 0.01$ at PSM and protein levels).
-
 ---
 
 ## Analytical Pipeline
 
 1. **Pre-analytical Sample QC & Outlier Exclusion:** Evaluation of channel-wide reporter yield identified severe labeling suppression in replicate `PC3_EV_R1` (>3.5-fold drop in total intensity, 33.1% dropout rate). It was excluded to prevent systemic dilution bias, yielding an authenticated 6-channel framework ($n=2$ for PC3, $n=4$ for PC3M).
 2. **Background Noise Gating:** Empirical dual-threshold filtering against non-specific recipient background (`SAOS2 alone`, $N=3$) and empty channels. Retained $N=212$ high-confidence EV cargo proteins satisfying $\max(\text{Median}) > \alpha$ ($\alpha = 6.6$) and signal-to-background ratio $\ge \beta \times \text{Median}_{\text{ctrl}}$ ($\beta = 2.0$).
-3. **Internal Spike-in Normalization & Loading Invariance:** Co-culture reporter signals were normalized against matched cell-lysate + EV reference spike standards (geometric mean). Downstream sample-median centering algebraically cancels uniform additive dosing offsets (including NTA particle adjustments), ensuring that downstream metrics reflect intrinsic stoichiometric selectivity rather than particle count discrepancies.
+3. **Internal Spike-in Normalization & Loading Invariance:** Co-culture reporter signals were normalized against matched cell-lysate + EV reference spike standards (mean of technical replicates). Downstream sample-median centering algebraically cancels uniform additive dosing offsets (including NTA particle adjustments), ensuring that downstream metrics reflect intrinsic stoichiometric selectivity rather than particle count discrepancies.
 4. **Resolution of Global Scale Effect (PC1 Bias):** Unsupervised PCA on uncentered uptake data revealed that PC1 accounted for 87.4% of total variance with 99.5% unidirectional positive loadings. Sample-median centering successfully decoupled bulk endocytic volume kinetics from relative cargo composition.
 5. **Statistical Hypothesis Testing:**
    - **Baseline Screening (Welch's $t$-test):** Unmoderated unequal-variance testing ($q < 0.10, \vert{}\log_2\text{FC}\vert{} \ge 1.0$) identified **22 differential candidates**.
@@ -66,8 +65,8 @@ jupyter lab
 ├── TMT_pool.xlsx                                  # Experimental design and channel annotation metadata
 ├── Methodological Rationale.pdf                   # Detailed technical report and mathematical rationale
 ├── Quantitative Proteomic Profiling of EV Uptake.pdf  # Project presentation deck
-├── pixi.toml / pixi.lock                         # Declarative dependency locks (Python 3.14 + R limma)
-├── environment.yml                               # Conda-compatible environment export
+├── pixi.toml / pixi.lock                          # Declarative dependency locks (Python 3.14 + R limma)
+├── environment.yml                                # Conda-compatible environment export
 ├── LICENSE                                        # GNU General Public License v3.0
 └── README.md
 

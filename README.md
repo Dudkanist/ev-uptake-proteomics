@@ -62,7 +62,6 @@ jupyter lab
 
 ```text
 ├── main.ipynb                                     # Complete reproducible analysis notebook
-├── TMT_pool.xlsx                                  # Experimental design and channel annotation metadata
 ├── Methodological Rationale.pdf                   # Detailed technical report and mathematical rationale
 ├── Quantitative Proteomic Profiling of EV Uptake.pdf  # Project presentation deck
 ├── pixi.toml / pixi.lock                          # Declarative dependency locks (Python 3.14 + R limma)

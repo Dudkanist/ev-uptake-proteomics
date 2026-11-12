@@ -30,3 +30,4 @@ matplotlib-venn = ">=1.1.2,<2"
 [activation.env]
 R_HOME = "$PIXI_PROJECT_ROOT/.pixi/envs/default/lib/R"
 PATH = "$PIXI_PROJECT_ROOT/.pixi/envs/default/lib/R/bin:$PATH"
+

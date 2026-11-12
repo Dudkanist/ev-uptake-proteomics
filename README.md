@@ -1,28 +1,46 @@
-# Quantitative Proteomic Profiling of Differential EV Uptake in Osteoblastic Niches
+# Quantitative Proteomic Profiling of Differential EV Cargo Uptake in Osteoblastic Niches
 
 [![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json&style=flat-square)](https://pixi.sh)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](LICENSE)
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg?style=flat-square)](https://www.python.org/downloads/)
 
-This repository contains the end-to-end computational pipeline and statistical framework for quantifying differential extracellular vesicle (EV) cargo uptake by recipient osteoblastic SAOS-2 cells. The biological model compares internalization of parental (**PC3**) versus metastatic (**PC3M-luc-C6**) prostate carcinoma EV cargo.
+This repository contains the end-to-end computational workflow, statistical framework, and technical reports for quantifying differential extracellular vesicle (EV) cargo internalization by recipient osteoblast-like **SAOS-2** cells. The experimental model compares the uptake of vesicles derived from parental non-metastatic (**PC3**) versus bone-metastatic (**PC3M-luc-C6**) prostate cancer lines to distinguish active, selective cargo delivery from passive bulk endocytosis.
+
 ---
 
 ## Experimental Design & MS Acquisition
-- **Metabolic Pulse-Chase Tracing:** Heavy metabolic labelling (Arg10 / Lys-D8 SILAC) of donor EV cargo against an unlabelled recipient SAOS-2 cellular background (accounting for ~97.5% of PSMs).
-- **Multiplexed Acquisition:** 18-plex TMTpro SPS-MS3 workflow acquired on a Thermo Orbitrap Eclipse with synchronous precursor selection (MIPS precursor isolation, co-isolation threshold < 75% to substantially mitigate ratio compression).
-- **Identification & Confidence:** Real-Time Search (RTS) triggering, Sequest HT search engine, and Percolator target-decoy scoring ($q \le 0.01$ at PSM and protein levels).
+
+- **Metabolic Pulse-Chase Tracing:** Donor prostate cancer cells were metabolically labeled with Heavy isotopes (Arg10 / Lys-D8 SILAC), allowing unambiguous separation of internalized donor EV cargo (2.5% of identified PSMs, $n = 2,209$) from the unlabeled Light recipient SAOS-2 cellular background (97.5% of PSMs, $n = 85,929$).
+- **Multiplexed Isobaric Quantification:** 18-plex TMTpro SPS-MS3 acquisition on a Thermo Orbitrap Eclipse across natural uptake co-cultures, unincubated cell-lysate + EV spike-in standards, negative biological controls (`SAOS-2 alone`), empty channels, and concentrated EV boost channels.
+- **Targeted Real-Time Search (RTS):** RTS duty-cycle filtering selectively triggered SPS-MS3 scans for Heavy precursors, mitigating reporter ion ratio compression from the co-isolated Light cellular background ($q \le 0.01$ at PSM and protein levels via Sequest HT / Percolator).
+
 ---
 
-## Analytical Pipeline
+## Analytical Pipeline & Key Findings
 
-1. **Pre-analytical Sample QC & Outlier Exclusion:** Evaluation of channel-wide reporter yield identified severe labeling suppression in replicate `PC3_EV_R1` (>3.5-fold drop in total intensity, 33.1% dropout rate). It was excluded to prevent systemic dilution bias, yielding an authenticated 6-channel framework ($n=2$ for PC3, $n=4$ for PC3M).
-2. **Background Noise Gating:** Empirical dual-threshold filtering against non-specific recipient background (`SAOS2 alone`, $N=3$) and empty channels. Retained $N=212$ high-confidence EV cargo proteins satisfying $\max(\text{Median}) > \alpha$ ($\alpha = 6.6$) and signal-to-background ratio $\ge \beta \times \text{Median}_{\text{ctrl}}$ ($\beta = 2.0$).
-3. **Internal Spike-in Normalization & Loading Invariance:** Co-culture reporter signals were normalized against matched cell-lysate + EV reference spike standards (mean of technical replicates). Downstream sample-median centering algebraically cancels uniform additive dosing offsets (including NTA particle adjustments), ensuring that downstream metrics reflect intrinsic stoichiometric selectivity rather than particle count discrepancies.
-4. **Resolution of Global Scale Effect (PC1 Bias):** Unsupervised PCA on uncentered uptake data revealed that PC1 accounted for 87.4% of total variance with 99.5% unidirectional positive loadings. Sample-median centering successfully decoupled bulk endocytic volume kinetics from relative cargo composition.
-5. **Statistical Hypothesis Testing:**
-   - **Baseline Screening (Welch's $t$-test):** Unmoderated unequal-variance testing ($q < 0.10, \vert{}\log_2\text{FC}\vert{} \ge 1.0$) identified **22 differential candidates**.
-   - **Empirical Bayes Moderation (`limma-trend`):** Variance shrinkage borrowing dispersion information across the proteomic ensemble ($d_g = 4 \to d_g + d_0 \approx 7.1$) mitigated small-sample instability, expanding discovery to **37 statistically significant drivers** (21 PC3M-enriched, 16 PC3-enriched).
-6. **Unsupervised Phenotype Clustering:** Hierarchical clustering on significant hits yielded clean blind bifurcation of biological replicates and partitioned the cargo into an **ECM remodeling/adhesion program** (COL4A2, TGM2, FN1, TNC, ITGA1/A3/B1) and an **ER proteostasis/endosomal module** (CD63, MAP3K12, HM13, GDF15, HSP90B1).
+The computational workflow in [`main.ipynb`](main.ipynb) progresses through eight stages documented across the project reports:
+
+1. **Upstream Spectral QC & Carrier Artifact Depletion:** Verification of tryptic digestion parity across Light and Heavy pools, RTS duty-cycle diagnostics (`Quan Info`), and exclusion of 7 carrier-restricted peptides detected exclusively in boost/spike-in channels ($1,018 \to 1,011$ quantifiable Heavy peptides).
+2. **Sequence-Level Shared Peptide Curation (*Progress Report 1*):** Re-mapping of 73 ambiguous shared peptides against the reviewed human Swiss-Prot reference proteome (`UP000005640`). Using an Occam's razor parsimony rule anchored to 372 uniquely confirmed genes, 45 records (44 unique peptides after merging modification variants of `SEVDMLK` in *ANXA2*) were rescued across 20 confirmed gene loci, while 28 unresolved paralogous peptides were grouped into 19 standardized multigene families (`Family_*`), yielding a consolidated matrix of **393 protein groups**.
+3. **Sample-Level QC & Empirical Background Gating (*Methodological Rationale*):** Exclusion of technical preparation outlier `PC3_EV_R1` (>3.5-fold intensity collapse, 34.1% dropout rate), establishing a validated 6-channel biological uptake cohort ($n = 2$ PC3, $n = 4$ PC3M). Non-parametric dual-threshold gating against `SAOS-2 alone` negative controls ($\alpha = 6.6$ baseline median noise floor; $\beta = 2.0$ signal-to-background fold-change cutoff derived from a 23.9% control CV) retained **226 high-confidence internalized EV cargo proteins**.
+4. **Condition-Matched Spike-In Normalization & Scale Decoupling:** Boundary-level missing values (3 isolated zero measurements; 99.78% completeness) were imputed at $\text{LOD}/2 = 0.85$. Uptake intensities were normalized against condition-matched unincubated spike-in references. Unsupervised PCA on uncentered uptake profiles revealed a dominant global scale effect along PC1 (84.8% variance; 200/226 proteins projecting positively), reflecting higher overall bulk endocytosis of metastatic PC3M vesicles. Applying **sample-median centering** decoupled bulk uptake volume (and any uniform NTA particle dosing offset) from relative cargo stoichiometry, rebalancing PC1 to 50.6% explained variance.
+5. **Empirical Bayes Differential Uptake Modeling (`limma-trend`):** While unmoderated Welch's $t$-testing ($q < 0.10, \vert{}\log_2\text{FC}\vert{} \ge 1.0$) identified 24 candidates due to degree-of-freedom collapse ($n_1 - 1 = 1$), borrowing variance information across the proteome via Empirical Bayes shrinkage (`limma-trend`) expanded discovery to **42 statistically significant cargo drivers** (23 enriched in metastatic PC3M uptake, 19 enriched in parental PC3 uptake).
+6. **Unsupervised Phenotypic Clustering:** Two-way hierarchical clustering of the 42 significant drivers cleanly bifurcated parental PC3 and metastatic PC3M replicates without supervision, resolving a **metastatic ECM remodeling & integrin adhesion program** (`COL4A2`, `TGM2`, `FN1`, `TNC`, `CCN1`, `ITGA1`, `ITGA3`, `ITGB1`, `ANPEP`, `CTNND1`) versus a **parental ER proteostasis & vesicular trafficking module** (`CD63`, `MAP3K12`, `HM13`, `LMAN2`, `GDF15`, `HSP90B1`, `HSPA5`).
+7. **Non-Parametric Rank-Shift Benchmarking (*Progress Report 2*):** Orthogonal validation using intra-channel ordinal abundance ranks ($\Delta\text{Rank} = \text{Rank}_{\text{Uptake}} - \text{Rank}_{\text{Spike-in}}$ and cross-phenotype $\Delta\Delta\text{Rank} = \Delta\text{Rank}_{\text{PC3M}} - \Delta\text{Rank}_{\text{PC3}}$) confirmed strong monotonic concordance with parametric `limma-trend` effect sizes (Spearman $r_s = 0.913$), with 27 core drivers passing both parametric thresholds and $\vert{}\Delta\Delta\text{Rank}\vert{} \ge 50$.
+8. **Topological Stratification & Orthogonal Literature Validation (*Progress Report 3*):** Deterministic gating against the *In Silico Human Surfaceome* (`SURFY`) and UniProt subcellular ontologies stratified the 42 drivers into `Membrane` ($n = 11$), `Extracellular` ($n = 7$), `Organellar` ($n = 10$), and `Intracellular` ($n = 14$) compartments, revealing a 6-fold enrichment of extracellular matrix/corona proteins in metastatic PC3M vesicles (6 vs. 1 in PC3). Cross-referencing against human EV proteomics records in **Vesiclepedia (v5.1)** (accounting for post-2018 HGNC nomenclature updates) confirmed **100% (42/42)** of significant candidates as established human EV constituents.
+
+---
+
+## Documentation & Project Reports
+
+To provide full transparency into both the mathematical derivations and iterative pipeline refinements, the repository includes the primary methodological report alongside three focused follow-up reports:
+
+| Document | Scope & Key Contents |
+| :--- | :--- |
+| **[`Methodological Rationale.pdf`](Methodological%20Rationale.pdf)** | **Primary Technical Report:** Experimental setup, spectral QC, $\alpha/\beta$ noise gating, spike-in normalization, mathematical proof of dosing invariance, PCA scale-effect removal, and `limma-trend` modeling (initially evaluated on the conservative unique-peptide baseline cohort of $N = 372 \to 212$ proteins). |
+| **[`Progress Report 1.pdf`](Progress%20Report%201.pdf)** | **Ambiguous Peptide & Protein Group Resolution:** Reference re-mapping against Swiss-Prot (`UP000005640`), Occam's razor parsimony rescue of 20 gene loci, and creation of 19 multigene families (`Family_*`), expanding the quantified cohort from $372 \to 393$ total proteins ($212 \to 226$ post-filtering). |
+| **[`Progress Report 2.pdf`](Progress%20Report%202.pdf)** | **Non-Parametric Rank-Shift Selectivity:** Formulation of $\Delta\text{Rank}$ and $\Delta\Delta\text{Rank}$ metrics and macro-concordance benchmarking against `limma-trend` ($r_s = 0.913$). |
+| **[`Progress Report 3.pdf`](Progress%20Report%203.pdf)** | **Topological Stratification & Orthogonal Validation:** Structural classification of the 42 differential drivers via `SURFY` and 100% empirical validation across published human EV studies in *Vesiclepedia v5.1*. |
 
 ---
 
@@ -44,7 +62,7 @@ pixi run jupyter
 
 ### Option B: Using Conda / Mamba
 
-A cross-platform conda specification is provided via `environment.yml`:
+A cross-platform Conda specification is provided via `environment.yml`:
 
 ```bash
 # 1. Create and activate environment
@@ -61,23 +79,33 @@ jupyter lab
 ## Repository Structure
 
 ```text
-├── main.ipynb                                     # Complete reproducible analysis notebook
-├── Methodological Rationale.pdf                   # Detailed technical report and mathematical rationale
+├── main.ipynb                                         # Complete reproducible analysis notebook
+├── Methodological Rationale.pdf                       # Primary technical report and mathematical rationale
+├── Progress Report 1.pdf                              # Follow-up #1: Shared peptide parsimony & multigene families
+├── Progress Report 2.pdf                              # Follow-up #2: Non-parametric rank-shift selectivity (ΔRank / ΔΔRank)
+├── Progress Report 3.pdf                              # Follow-up #3: SURFY topology & Vesiclepedia v5.1 validation
 ├── Quantitative Proteomic Profiling of EV Uptake.pdf  # Project presentation deck
-├── pixi.toml / pixi.lock                          # Declarative dependency locks (Python 3.14 + R limma)
-├── environment.yml                                # Conda-compatible environment export
-├── LICENSE                                        # GNU General Public License v3.0
+├── data/                                              # Input directory (excluded from VCS; see Data Availability)
+│   ├── MEK_25_02_label_included.txt                   # Proteome Discoverer peptide-level export
+│   ├── UP000005640_9606.fasta.gz                      # UniProt reviewed human reference proteome (auto-downloaded)
+│   ├── table_S3_surfaceome.xlsx                       # SURFY in silico human surfaceome master table
+│   └── VESICLEPEDIA_PROTEIN_MRNA_DETAILS_5.1.txt      # Vesiclepedia v5.1 compendium flat file
+├── pixi.toml / pixi.lock                              # Declarative dependency locks (Python 3.14 + R limma)
+├── environment.yml                                    # Conda-compatible environment export
+├── LICENSE                                            # GNU General Public License v3.0
 └── README.md
 
 ```
 
-Note: Raw mass spectrometry output files (`MEK_*.txt`) are excluded from version control in compliance with institutional data governance policies. Data matrices are available upon reasonable request.
+### Data Availability
+
+Raw mass spectrometry output files (`MEK_25_02_label_included.txt`) are excluded from version control in compliance with institutional data governance policies and are available upon reasonable request. The canonical human proteome (`UP000005640_9606.fasta.gz`) is automatically fetched from UniProt by `main.ipynb` if not present locally, while public reference tables (`SURFY` Table S3 and `Vesiclepedia` v5.1) can be obtained from their respective publications.
 
 ---
 
 ## Citation & License
 
-This project is open-source under the [GNU General Public License v3.0 (GPL-3.0)](https://www.google.com/search?q=LICENSE).
+This project is distributed under the [GNU General Public License v3.0 (GPL-3.0)](https://www.google.com/search?q=LICENSE).
 
 ```bibtex
 @software{mantsevich2026ev,
@@ -87,4 +115,5 @@ This project is open-source under the [GNU General Public License v3.0 (GPL-3.0)
   publisher = {GitHub},
   url       = {https://github.com/Dudkanist/ev-uptake-proteomics}
 }
+
 ```

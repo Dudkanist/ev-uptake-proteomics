@@ -1,2 +1,4 @@
 .pixi/
 data/
+pyproject.toml
+.ruff_cache
